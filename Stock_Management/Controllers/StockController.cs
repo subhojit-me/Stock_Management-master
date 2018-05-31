@@ -30,6 +30,22 @@ namespace Stock_Management.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            List<SelectListItem> slist = new List<SelectListItem>();
+            ///get categories from database and send to view as a drop down
+            using (Db db = new Db())
+            {
+                var cat = db.categories.ToList();
+                foreach (var item in cat)
+                {
+                    slist.Add(new SelectListItem()
+                    {
+                        Text = item.Id.ToString(),
+                        Value = item.Categoryname
+                    });
+                }
+            }
+            ViewBag.CategoryList = new SelectList(slist, "Text","Value");
+
             return View();
         }
 
