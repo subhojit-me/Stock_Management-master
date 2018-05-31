@@ -69,6 +69,9 @@ namespace Stock_Management.Controllers
 
             using(Db db = new Db())
             {
+                var cat = db.categories.Find(model.CategoryId);
+                dto.Category = cat;
+
                 db.Products.Add(dto);
                 db.SaveChanges();
             }
@@ -131,7 +134,7 @@ namespace Stock_Management.Controllers
 
                 db.SaveChanges();
             }
-            TempData["cnf"] = "Product data successfully edited";
+            //TempData["cnf"] = "Product data successfully edited";
             return RedirectToAction("Index","Stock");
         }
 

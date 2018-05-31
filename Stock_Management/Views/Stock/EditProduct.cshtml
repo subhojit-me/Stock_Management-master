@@ -5,12 +5,7 @@
 }
 
 <h2>EditProduct</h2>
-@if(TempData["cnf"] != null)
-{
-    <div class="alert alert-success">
-        TempData["cnf"];
-    </div>
-}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
