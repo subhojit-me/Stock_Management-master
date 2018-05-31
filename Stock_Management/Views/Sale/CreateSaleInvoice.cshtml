@@ -1,0 +1,109 @@
+﻿@model Stock_Management.Models.ViewModels.StockVm
+
+@{
+    ViewBag.Title = "CreateSaleInvoice";
+}
+
+<h2>Create New Sale Invoice</h2>
+<hr />
+
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["error"]
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Id, "Select product Id", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Id, ViewBag.ProductList as SelectList, htmlAttributes: new { @id = "id" })
+            </div>
+        </div>
+
+        <!--
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        -->
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, htmlAttributes: new { @id = "price", @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="btn-submit" value="Create Invoice" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Invoice List", "Index", new { htmlAttributes = new { @class = "btn btn-default" } })
+</div>
+
+@section Scripts{
+    <!--Script to Validate Failed Available Quantity -->
+    <script>
+        /*
+        $(function () {
+            $("#btn-submit").click(function () {
+
+               var div = $('error-message');
+                var id = $('#id').find(":selected").val();
+                var price = $("#Price").val();
+                var quantity = $("#Quantity").val();
+
+                alert("Id = " + id + " Price = " + price + " Quantity= " + quantity);
+
+                var url = "/Sale/CheckAvailablity";
+
+                alert("URL intilized");
+
+                $.post(url, { Id: id }, function (availablity) {
+                    alert("Availablity = " + availablity + " Quantity= " + quantity);
+                    if (availablity >= quantity) {
+                        alert("Returning true");
+                        return true;
+                    }
+
+                    div.html("Quantity not available");
+                    setTimeout(function () {
+                        div.fadeOut("fast", 2000);
+                    });
+                    alert("Returning False");
+                    return false;
+                    alert("Above line returned false");
+                });
+                alert("[END OF CLICK EVENT]");
+            });
+            alert("[END OF JQUERY FNCTION]");
+        });
+        */
+    </script>
+}

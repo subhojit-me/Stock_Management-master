@@ -1,0 +1,163 @@
+﻿@model IEnumerable<Stock_Management.Models.ViewModels.StockVm>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Available Items in Stocks</h2>
+
+@if (!Model.Any())
+{
+    <h1 class="text-center"> There are no item in Stock</h1>
+}
+else
+{
+    <div class="btn btn-default">
+        @Html.ActionLink("Add New Stock", "Create")    @*htmlAttributes: new { @class = "control-label col-md-2" } *@
+    </div>
+    <br />
+    <br />
+    <table id="customers" class="table table-hover table-bordered">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.Quantity > 0)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditProduct", new { id = item.Id }) |
+                    <!-- @Html.ActionLink("Details", "ProductDetails", new { id = item.Id }) | -->
+                    @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id }, new { @class = "delete" })
+                </td>
+            </tr>
+            }
+        }
+    </table>
+}
+
+@{
+    int a = 0;
+    foreach (var item in Model)
+    {
+        if (item.Quantity == 0)
+        {
+            a++;
+        }
+    }
+}
+<br /><hr />
+@if (a > 0)
+{
+    <h2>Items with no availablity in stock</h2>
+
+    <table id ="Customer" class="table table-bordered table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.Quantity == 0)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditProduct", new { id = item.Id }) |
+                        <!-- @Html.ActionLink("Details", "ProductDetails", new { id = item.Id }) | -->
+                        @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id }, new { @class = "delete", productId = item.Id })
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#customers  .delete").click(function () {
+                if (!confirm("Are you sure want to delete"))
+                    return false
+            });
+
+            /*
+            $("#customers .delete").on("click", function (e) {
+                e.preventDefault();
+                console.log("Delete button is clicked");
+                if (confirm("Are you sure ou want to delete? ")) {
+                    var button = $(this);
+                    var id = button.attr("productId");
+                    alert("Id in parameter = " + id);
+                    $.ajax({
+                        url: "Stock/DeleteProduct/" + button.attr("id"),
+                            method: "DELETE",
+                            success: function () {
+                                alert("call successfully made by ajax");
+                                //button.parents("tr").remove();
+                            }
+                        });
+                        
+                 }
+            })
+         */
+
+
+        });
+    </script>
+}
