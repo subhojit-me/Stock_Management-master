@@ -1,4 +1,5 @@
-﻿using Stock_Management.Models.Data;
+﻿using PagedList;
+using Stock_Management.Models.Data;
 using Stock_Management.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Stock_Management.Controllers
     public class StockController : Controller
     {
         // GET: Stock
-        public ActionResult Index()
+       /* public ActionResult Index()
         {
             //Declare list of StockVm
             List<StockVm> products;
@@ -24,6 +25,43 @@ namespace Stock_Management.Controllers
                     .ToList();
             }
            
+            return View(products);
+        }
+        */
+        public ActionResult Index(int? page, int? catId)
+        {
+            //Declare list of StockVm
+            List<StockVm> products;
+
+            //set page nu,ber that will be transfer to view
+            var pageNumber = page ?? 1;
+
+            using (Db db = new Db())
+            {
+                products = db.Products.Include("Category")
+                            .ToList()
+                            .Where(x => catId == null || catId == 0 || x.Category.Id == catId )
+                            .OrderBy(x => x.Id)
+                            .Select(x => new StockVm(x))
+                            .ToList();
+                /*
+                    if (catId != null)
+                    {
+                        products2 = db.Products.Include("Category").ToArray()
+                                    .Where(x => x.Category.Id == catId || catId == 0)
+                                    .Select(x => new StockVm(x))
+                                    .ToList();
+                    }
+                */
+                //populate category list to show in he view
+                ViewBag.Categories = new SelectList(db.categories.ToList(),"Id","Categoryname");
+            }
+            //set selected category
+            ViewBag.selectedCat = catId.ToString();
+
+            //set pagination
+            ViewBag.onePageofProduct = products.ToPagedList(pageNumber, 5);
+
             return View(products);
         }
 

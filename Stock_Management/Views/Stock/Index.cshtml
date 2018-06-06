@@ -1,11 +1,31 @@
 ﻿@model IEnumerable<Stock_Management.Models.ViewModels.StockVm>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Product Lists";
 }
+
+@using PagedList.Mvc;
+@using PagedList;
 
 <h2>Available Items in Stocks</h2>
 
+<select id="Selectedcategory" name="Selectedcategory">
+    <option value="0">All</option>
+    @foreach (var item in ViewBag.Categories)
+    {
+        if (ViewBag.selectedCat == item.Value)
+        {
+            <option selected="selected" value="@item.Value">
+                @item.Text
+            </option>
+        }
+        else
+        {
+            <option value="@item.Value"> @item.Text </option>
+        }
+    }
+</select>
+<br /><br />
 @if (!Model.Any())
 {
     <h1 class="text-center"> There are no item in Stock</h1>
@@ -17,7 +37,9 @@ else
     </div>
     <br />
     <br />
-    <table id="customers" class="table table-hover table-bordered">
+    <h4>Showing data by PagedList</h4><br /><br />
+
+    <table id="customers" class="table table-bordered table-hover">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -37,36 +59,29 @@ else
             <th></th>
         </tr>
 
-        @foreach (var item in Model)
+        <!--Jquery pagedlist table that will display the data of products-->
+        @foreach (var product in ViewBag.onePageofProduct)
         {
-            if (item.Quantity > 0)
-            {
             <tr>
+                <td>@product.Name</td>
+
+                <td>@product.CategoryName</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+                <td>@product.Quantity</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "EditProduct", new { id = item.Id }) |
-                    <!-- @Html.ActionLink("Details", "ProductDetails", new { id = item.Id }) | -->
-                    @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id }, new { @class = "delete" })
+                    @Html.ActionLink("Edit", "EditProduct", new { id = product.Id }) |
+                    @Html.ActionLink("Delete", "DeleteProduct", new { id = product.Id }, new { @class = "delete", productId = product.Id })
                 </td>
             </tr>
-            }
         }
+
+        <!--Product Table of razor that will be replaced by Jquery PagedList-->
     </table>
-}
+
+    @Html.PagedListPager((IPagedList)ViewBag.onePageofProduct, page => Url.Action("Index", new { page, catId = ViewBag.selectedCat }))
+
+}   <!--else  ends  -->
 
 @{
     int a = 0;
@@ -83,7 +98,7 @@ else
 {
     <h2>Items with no availablity in stock</h2>
 
-    <table id ="Customer" class="table table-bordered table-hover">
+    <table id="Customer" class="table table-bordered table-hover">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -130,6 +145,9 @@ else
 
 @section Scripts{
     <script>
+        /*
+         * Page delete confirmation
+         */
         $(document).ready(function () {
             $("#customers  .delete").click(function () {
                 if (!confirm("Are you sure want to delete"))
@@ -137,6 +155,20 @@ else
             });
 
             /*
+             *   Selec Products from Selected category
+             */
+            $("#Selectedcategory").on("change", function () {
+                var url = $(this).val();
+
+                if (url) {
+                    window.location = "Index?catId=" + url;
+                }
+                return false;
+            });
+
+            /*
+             * Page delete through JQuery not working
+             *
             $("#customers .delete").on("click", function (e) {
                 e.preventDefault();
                 console.log("Delete button is clicked");
@@ -152,11 +184,10 @@ else
                                 //button.parents("tr").remove();
                             }
                         });
-                        
+
                  }
             })
          */
-
 
         });
     </script>
