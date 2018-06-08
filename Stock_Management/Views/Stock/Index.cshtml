@@ -33,11 +33,10 @@
 else
 {
     <div class="btn btn-default">
-        @Html.ActionLink("Add New Stock", "Create")    @*htmlAttributes: new { @class = "control-label col-md-2" } *@
+        @Html.ActionLink("Add New Stock", "Create", new { @class = "btn btn-default control-label col-md-2" } )
     </div>
     <br />
     <br />
-    <h4>Showing data by PagedList</h4><br /><br />
 
     <table id="customers" class="table table-bordered table-hover">
         <tr>
@@ -145,14 +144,8 @@ else
 
 @section Scripts{
     <script>
-        /*
-         * Page delete confirmation
-         */
+        
         $(document).ready(function () {
-            $("#customers  .delete").click(function () {
-                if (!confirm("Are you sure want to delete"))
-                    return false
-            });
 
             /*
              *   Selec Products from Selected category
@@ -168,26 +161,28 @@ else
 
             /*
              * Page delete through JQuery not working
-             *
+             */
             $("#customers .delete").on("click", function (e) {
                 e.preventDefault();
-                console.log("Delete button is clicked");
                 if (confirm("Are you sure ou want to delete? ")) {
                     var button = $(this);
                     var id = button.attr("productId");
-                    alert("Id in parameter = " + id);
+                    console.log("Delete with Id in parameter = " + id);
                     $.ajax({
-                        url: "Stock/DeleteProduct/" + button.attr("id"),
-                            method: "DELETE",
-                            success: function () {
-                                alert("call successfully made by ajax");
-                                //button.parents("tr").remove();
-                            }
-                        });
+                        url: "/Stock/DeleteProduct/" + id,
+                        method: "GET",
+                        success: function () {
+                            //alert("call successfully made by ajax");
+                            console.log("Removing= "+button.parents("tr"));
+                            button.parents("tr").remove();
+                        },
+                        fail: function () {
+                            console.log("Failed in call= " + URL);
+                        }
+                    });
 
-                 }
-            })
-         */
+                }
+            });
 
         });
     </script>

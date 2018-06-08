@@ -10,24 +10,6 @@ namespace Stock_Management.Controllers
     public class StockController : Controller
     {
         // GET: Stock
-       /* public ActionResult Index()
-        {
-            //Declare list of StockVm
-            List<StockVm> products;
-
-            //Initilize the list with data from database
-            using (Db db = new Db())
-            {
-                products = db.Products.Include("Category")
-                    .ToList()
-                    .OrderBy(x => x.Id)
-                    .Select(x => new StockVm(x))
-                    .ToList();
-            }
-           
-            return View(products);
-        }
-        */
         public ActionResult Index(int? page, int? catId)
         {
             //Declare list of StockVm
