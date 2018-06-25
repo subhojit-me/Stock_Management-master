@@ -15,7 +15,7 @@ namespace Stock_Management.Controllers
             //Declare list of StockVm
             List<StockVm> products;
 
-            //set page nu,ber that will be transfer to view
+            //set page number that will be transfer to view
             var pageNumber = page ?? 1;
 
             using (Db db = new Db())
@@ -42,7 +42,7 @@ namespace Stock_Management.Controllers
             ViewBag.selectedCat = catId.ToString();
 
             //set pagination
-            ViewBag.onePageofProduct = products.ToPagedList(pageNumber, 5);
+            //ViewBag.onePageofProduct = products.ToPagedList(pageNumber, 5);
 
             return View(products);
         }

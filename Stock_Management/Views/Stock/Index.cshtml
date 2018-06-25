@@ -3,12 +3,13 @@
 @{
     ViewBag.Title = "Product Lists";
 }
-
-@using PagedList.Mvc;
-@using PagedList;
-
+<!--
+using PagedList.Mvc;
+using PagedList;
+-->
 <h2>Available Items in Stocks</h2>
 
+<!--Generating the category dropdown list from viewbag.categoryLIsts-->
 <select id="Selectedcategory" name="Selectedcategory">
     <option value="0">All</option>
     @foreach (var item in ViewBag.Categories)
@@ -26,6 +27,8 @@
     }
 </select>
 <br /><br />
+
+
 @if (!Model.Any())
 {
     <h1 class="text-center"> There are no item in Stock</h1>
@@ -33,53 +36,58 @@
 else
 {
     <div class="btn btn-default">
-        @Html.ActionLink("Add New Stock", "Create", new { @class = "btn btn-default control-label col-md-2" } )
+        @Html.ActionLink("Add New Stock", "Create", new { @class = "btn btn-default control-label col-md-2" })
     </div>
     <br />
     <br />
 
-    <table id="customers" class="table table-bordered table-hover">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th></th>
-        </tr>
-
-        <!--Jquery pagedlist table that will display the data of products-->
-        @foreach (var product in ViewBag.onePageofProduct)
-        {
+    <table id="stock" class="table table-bordered table-hover">
+        <thead>
             <tr>
-                <td>@product.Name</td>
-
-                <td>@product.CategoryName</td>
-                <td>@product.Description</td>
-                <td>@product.Price</td>
-                <td>@product.Quantity</td>
-                <td>
-                    @Html.ActionLink("Edit", "EditProduct", new { id = product.Id }) |
-                    @Html.ActionLink("Delete", "DeleteProduct", new { id = product.Id }, new { @class = "delete", productId = product.Id })
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th> Operations </th>
             </tr>
-        }
+        </thead>
+
+        <tbody>
+            <!--Jquery pagedlist table that will display the data of products-->
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+
+                    <td>@product.CategoryName</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price</td>
+                    <td>@product.Quantity</td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "EditProduct", new { id = product.Id }) | 
+                        @Html.ActionLink("Delete", "DeleteProduct", new { id = product.Id }, new { @class = "delete", productId = product.Id })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
 
         <!--Product Table of razor that will be replaced by Jquery PagedList-->
     </table>
 
-    @Html.PagedListPager((IPagedList)ViewBag.onePageofProduct, page => Url.Action("Index", new { page, catId = ViewBag.selectedCat }))
-
+    
 }   <!--else  ends  -->
 
 @{
@@ -95,6 +103,7 @@ else
 <br /><hr />
 @if (a > 0)
 {
+    <!--
     <h2>Items with no availablity in stock</h2>
 
     <table id="Customer" class="table table-bordered table-hover">
@@ -133,28 +142,35 @@ else
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "EditProduct", new { id = item.Id }) |
-                        <!-- @Html.ActionLink("Details", "ProductDetails", new { id = item.Id }) | -->
-                        @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id }, new { @class = "delete", productId = item.Id })
-                    </td>
-                </tr>
-            }
-        }
+                        @Html.ActionLink("Details", "ProductDetails", new { id = item.Id }) |
+    @Html.ActionLink("Delete", "DeleteProduct", new { id = item.Id }, new { @class = "delete", productId = item.Id })
+    </td>
+    </tr>
+}
+}
     </table>
+    -->
 }
 
 @section Scripts{
+    @Scripts.Render("~/bundles/datatables")
+
     <script>
-        
         $(document).ready(function () {
+
+            //Call the data-table function.
+            $("#stock").DataTable();
+            //console.log("Data Table= " + a)
+
 
             /*
              *   Selec Products from Selected category
              */
             $("#Selectedcategory").on("change", function () {
                 var url = $(this).val();
-
+                //alert("Value= " + url);
                 if (url) {
-                    window.location = "Index?catId=" + url;
+                    window.location = "?catId=" + url;
                 }
                 return false;
             });
@@ -173,7 +189,7 @@ else
                         method: "GET",
                         success: function () {
                             //alert("call successfully made by ajax");
-                            console.log("Removing= "+button.parents("tr"));
+                            console.log("Removing= " + button.parents("tr"));
                             button.parents("tr").remove();
                         },
                         fail: function () {

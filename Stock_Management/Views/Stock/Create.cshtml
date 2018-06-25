@@ -6,25 +6,25 @@
 
 <h2>Add item in stock</h2>
 
-@if(TempData["sm"] != null)
+@if (TempData["sm"] != null)
 {
     <div class="alert alert-success">
         @TempData["sm"]
     </div>
 }
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CategoryId, ViewBag.CategoryList as SelectList, htmlAttributes: new { @class = "control-label col-md-4 dropdownn" })
+                @Html.DropDownListFor(model => model.CategoryId, ViewBag.CategoryList as SelectList, htmlAttributes: new { @class = "control-label col-md-4 dropdown" })
                 @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -68,3 +68,8 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
