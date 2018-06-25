@@ -160,6 +160,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfitAndLossController.cs" />
     <Compile Include="Controllers\SaleController.cs" />
@@ -199,17 +200,24 @@
     <Compile Include="Migrations\201805301427207_RenamedNavigationPropertyProductTable.Designer.cs">
       <DependentUpon>201805301427207_RenamedNavigationPropertyProductTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806100632225_AddedUserTable.cs" />
+    <Compile Include="Migrations\201806100632225_AddedUserTable.Designer.cs">
+      <DependentUpon>201806100632225_AddedUserTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Data\CategoryDTO.cs" />
     <Compile Include="Models\Data\Db.cs" />
     <Compile Include="Models\Data\ProfitAndLossDTO.cs" />
     <Compile Include="Models\Data\SaleDTO.cs" />
     <Compile Include="Models\Data\StockDTO.cs" />
+    <Compile Include="Models\Data\UserDTO.cs" />
     <Compile Include="Models\ViewModels\CategoryVM.cs" />
     <Compile Include="Models\ViewModels\CreatesaleVM.cs" />
+    <Compile Include="Models\ViewModels\LoginVM.cs" />
     <Compile Include="Models\ViewModels\ProfitAndLossVM.cs" />
     <Compile Include="Models\ViewModels\SaleViewVM.cs" />
     <Compile Include="Models\ViewModels\StockVm.cs" />
+    <Compile Include="Models\ViewModels\UserVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +274,8 @@
     <Content Include="Views\Sale\Index.cshtml" />
     <Content Include="Views\Sale\CreateSaleInvoice.cshtml" />
     <Content Include="Views\ProfitAndLoss\Index.cshtml" />
+    <Content Include="Views\Account\CreateAccount.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201805250726583_InitialCreate.resx">
@@ -291,6 +301,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805301427207_RenamedNavigationPropertyProductTable.resx">
       <DependentUpon>201805301427207_RenamedNavigationPropertyProductTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806100632225_AddedUserTable.resx">
+      <DependentUpon>201806100632225_AddedUserTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,125 @@
+﻿@model Stock_Management.Models.ViewModels.UserVM
+
+@{
+    ViewBag.Title = "Create Account";
+}
+
+@if (TempData["error"] != null)
+{
+    <h3> @TempData["error"] </h3>
+}
+
+<h2>Create Account</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal jsForm">
+        <h4>User Registration</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "jsNameCheck form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                <span id="msgSpan" style="display: none"></span>
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default  jsSubmitButton" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            /*
+             * CheckNameAvailablity
+             */
+            $(".jsNameCheck").keyup(function () {
+                var value = $(".jsNameCheck").val();
+                //console.log("KeyUp event working, value= " + value);
+                if (value.length > 5) {
+                    // console.log("Length Accepte")
+
+                    var url = "/Account/CheckNameAvailablity/";
+                    //console.log("Value= " + value + "URL= " + url);
+                    $.get(url, { name: value },
+                        success = function (status) {
+                            //status is true when name is accepted
+                            console.log("Get request by " + value + "= " + status);
+                            if (status == "Accepted") {
+                                console.log("Status is true");
+                                $("#msgSpan").css("color", "green");
+                                $("#msgSpan").text("User name Accepted");
+                                $("#msgSpan").css("display", "inline-block");
+                            }
+                            else {
+                                console.log("Status is False");
+                                $("#msgSpan").css("color", "red");
+                                $("#msgSpan").text("User name is already taken");
+                                $("#msgSpan").css("display", "inline-block");
+                            }
+                        }
+                    );
+                } else {
+                    //Input character is less than length of 
+                    $("#msgSpan").css("color", "red");
+                    $("#msgSpan").text("User name should be mininum of 5 in length");
+                    $("#msgSpan").css("display", "inline-block");
+                }
+            });
+        });
+
+    </script>
+}
