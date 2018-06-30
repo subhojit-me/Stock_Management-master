@@ -102,12 +102,14 @@
                                 $("#msgSpan").css("color", "green");
                                 $("#msgSpan").text("User name Accepted");
                                 $("#msgSpan").css("display", "inline-block");
+                                $("input[type=submit]").removeAttr("disabled");
                             }
                             else {
                                 console.log("Status is False");
                                 $("#msgSpan").css("color", "red");
                                 $("#msgSpan").text("User name is already taken");
                                 $("#msgSpan").css("display", "inline-block");
+                                $("input[type=submit]").attr("disabled", "disabled");
                             }
                         }
                     );
@@ -116,6 +118,7 @@
                     $("#msgSpan").css("color", "red");
                     $("#msgSpan").text("User name should be mininum of 5 in length");
                     $("#msgSpan").css("display", "inline-block");
+                    $("input[type=submit]").attr("disabled", "disabled");
                 }
             });
         });

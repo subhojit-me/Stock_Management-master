@@ -10,6 +10,7 @@
         @TempData["error"]
     </div>
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -19,7 +20,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Id, "Select product Id", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Id, ViewBag.ProductList as SelectList, new { @id = "id", @class = "dropdown-toggle" })
+                @Html.DropDownListFor(model => model.Id, ViewBag.ProductList as SelectList, new { @id = "id", @class = "jsModelId dropdown-toggle" })
             </div>
         </div>
         <!--
@@ -41,13 +42,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @id = "js-qty", @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                <span class="js-avl" style="display: none"></span>
             </div>
         </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" id="btn-submit" value="Create Invoice" class="btn btn-default" />
+                <input type="submit" id="btn-submit jsButton" value="Create Invoice" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -56,49 +59,82 @@
     @Html.ActionLink("Back to Invoice List", "Index", new { htmlAttributes = new { @class = "btn btn-default" } })
 </div>
 
-<!--
-    Scripts.Render("~/bundles/jqueryval")
-    -->
-
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
 
     <!--Script to Validate Failed Available Quantity -->
     <script>
-                                /*
-                                $(function () {
-                                    $("#btn-submit").click(function () {
 
-                                       var div = $('error-message');
-                                        var id = $('#id').find(":selected").val();
-                                        var price = $("#Price").val();
-                                        var quantity = $("#Quantity").val();
+        $(document).ready(function () {
+            var ProductId = -1;
 
-                                        alert("Id = " + id + " Price = " + price + " Quantity= " + quantity);
+        $("#btn-submit").click(function () {
 
-                                        var url = "/Sale/CheckAvailablity";
+            var div = $('error-message');
+            var id = $('#id').find(":selected").val();
+            var price = $("#Price").val();
+            var quantity = $("#Quantity").val();
 
-                                        alert("URL intilized");
+            alert("Id = " + id + " Price = " + price + " Quantity= " + quantity);
 
-                                        $.post(url, { Id: id }, function (availablity) {
-                                            alert("Availablity = " + availablity + " Quantity= " + quantity);
-                                            if (availablity >= quantity) {
-                                                alert("Returning true");
-                                                return true;
-                                            }
+            var url = "/Sale/CheckAvailablity";
 
-                                            div.html("Quantity not available");
-                                            setTimeout(function () {
-                                                div.fadeOut("fast", 2000);
-                                            });
-                                            alert("Returning False");
-                                            return false;
-                                            alert("Above line returned false");
-                                        });
-                                        alert("[END OF CLICK EVENT]");
-                                    });
-                                    alert("[END OF JQUERY FNCTION]");
-                                });
-                                */
+            alert("URL intilized");
+
+            $.post(url, { Id: id }, function (availablity) {
+                alert("Availablity = " + availablity + " Quantity= " + quantity);
+                if (availablity >= quantity) {
+                    alert("Returning true");
+                    return true;
+                }
+
+                div.html("Quantity not available");
+                setTimeout(function () {
+                    div.fadeOut("fast", 2000);
+                });
+                alert("Returning False");
+                return false;
+                alert("Above line returned false");
+            });
+            alert("[END OF CLICK EVENT]");
+        });
+
+            //Availablity message is displaying successfully. button disable not working
+            $('#js-qty').keyup(function () {
+                var val = $('#js-qty').val();
+                //console.log("Seleced value= " + val + ", ProductId= " + ProductId);
+
+                var url = "/Sale/CheckAvailablity/";
+                //console.log("Value= " + value + "URL= " + url);
+                $.get(url, { id: ProductId },
+                    success = function (avl) {
+                        //console.log("Availabl= " + avl);
+                        if (avl >= val) {
+                            //console.log("Status is true");
+                            $(".js-avl").css("color", "green");
+                            $(".js-avl").text("Quantity Avalable");
+                            $(".js-avl").css("display", "inline-block");
+                            $("input[type=submit]").removeAttr("disabled");
+                        }
+                        else {
+                            //console.log("Status is False");
+                            $(".js-avl").css("color", "red");
+                            $(".js-avl").text("Quantity is not Avalable");
+                            $(".js-avl").css("display", "inline-block");
+                            $("input[type=submit]").attr("disabled", "disabled");
+                        }
+                    });
+            });
+
+            $(".jsModelId").change(function () {
+                $(".jsModelId option:selected").each(function () {
+                    ProductId = $(this).val();
+                });
+                console.log("after change= " + ProductId);
+            }).trigger("change");
+
+
+    });
+                                
     </script>
 }
